@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Kryss.pl</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="navbar">
+  <div class="logo" onclick="location.href='index.html'">Kryss.pl</div>
+  <div class="nav-links">
+    <a href="blog.html">Blog</a>
+    <a href="projekty.html">Projekty</a>
+    <a href="cv.html">CV</a>
+    <a href="kontakt.html">Kontakt</a>
+    <button id="lang-toggle">PL/EN</button>
+  </div>
+</nav>
+
+<section class="blog-controls">
+  <label for="sort">Sortuj:</label>
+  <select id="sort">
+    <option value="newest">Najnowsze</option>
+    <option value="oldest">Najstarsze</option>
+    <option value="a-z">A → Z</option>
+    <option value="z-a">Z → A</option>
+  </select>
+</section>
+
+<section id="blog-list" class="blog-list">
+  <!-- Wpisy ładowane dynamicznie -->
+</section>
+
+<script src="main.js"></script>
+<script src="blog.js"></script>
+</body>
+</html>
