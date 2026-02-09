@@ -2,38 +2,201 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kryss.pl</title>
-<link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{margin:0;font-family:Arial;background:#121212;color:#fff}
+.navbar{
+  position:fixed;top:0;width:100%;z-index:1000;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 20px;background:#111
+}
+.logo{font-size:1.5em;font-weight:bold;cursor:pointer}
+.nav-links button{
+  margin-left:15px;background:none;border:none;
+  color:#fff;cursor:pointer
+}
+.nav-links button:hover{color:#1db954}
+main{padding:90px 20px;max-width:1000px;margin:auto}
+.card{
+  background:#1a1a1a;padding:20px;border-radius:12px;margin-bottom:15px
+}
+a.link{color:#1db954;cursor:pointer;text-decoration:none}
+select{background:#1a1a1a;color:#fff;border:1px solid #333;padding:5px}
+</style>
 </head>
+
 <body>
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="logo" onclick="location.href='index.html'">Kryss.pl</div>
-    <div class="nav-links">
-      <a href="blog.html">Blog</a>
-      <a href="projekty.html">Projekty</a>
-      <a href="cv.html">CV</a>
-      <a href="kontakt.html">Kontakt</a>
-      <button id="lang-toggle">PL/EN</button>
-    </div>
-  </nav>
 
-  <!-- Hero -->
-  <section class="hero">
-    <h1 id="hero-title">KRYSS — technologia, bezpieczeństwo i projekty</h1>
-    <p id="hero-desc">Programowanie, cyberbezpieczeństwo, nagłośnienie i eksperymenty techniczne.</p>
-  </section>
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="logo" onclick="go('home')">Kryss.pl</div>
+  <div class="nav-links">
+    <button onclick="go('blog')">Blog</button>
+    <button onclick="go('projects')">Projekty</button>
+    <button onclick="go('cv')">CV</button>
+    <button onclick="toggleLang()">PL / EN</button>
+  </div>
+</div>
 
-  <!-- Sekcje tematyczne -->
-  <section class="sections">
-    <div class="section-card">💻 Programowanie</div>
-    <div class="section-card">🔐 Cyberbezpieczeństwo</div>
-    <div class="section-card">🔊 Nagłośnienie</div>
-    <div class="section-card">🧪 Projekty</div>
-    <div class="section-card">🎮 Gry</div>
-  </section>
+<main id="app"></main>
 
-<script src="main.js"></script>
+<script>
+// =================== STAN ===================
+let lang = localStorage.getItem("lang") || "pl";
+let view = "home";
+let currentPost = null;
+
+// =================== BLOG ===================
+let posts = [
+  {
+    id:"p1",
+    title:{pl:"Pierwszy wpis",en:"First post"},
+    author:"Kryss",
+    date:"2026-02-09",
+    content:{
+      pl:"<p>To jest treść wpisu po polsku.</p>",
+      en:"<p>This is the post content in English.</p>"
+    }
+  },
+  {
+    id:"p2",
+    title:{pl:"Cyberbezpieczeństwo 101",en:"Cybersecurity 101"},
+    author:"Kryss",
+    date:"2026-02-07",
+    content:{
+      pl:"<p>Podstawy cyberbezpieczeństwa.</p>",
+      en:"<p>Cybersecurity basics.</p>"
+    }
+  }
+];
+
+// =================== PROJEKTY ===================
+const projects = [
+  {
+    name:"XBrowse",
+    desc:{pl:"Przeglądarka w Pythonie",en:"Python web browser"},
+    download:"https://github.com/user/xbrowse/releases"
+  },
+  {
+    name:"Neon Heist",
+    desc:{pl:"Gra przeglądarkowa stealth",en:"Stealth browser game"},
+    download:"https://github.com/user/neon-heist/releases"
+  }
+];
+
+// =================== FUNKCJE ===================
+function toggleLang(){
+  lang = lang==="pl"?"en":"pl";
+  localStorage.setItem("lang",lang);
+  render();
+}
+function go(v,id=null){
+  view=v; currentPost=id; render();
+}
+function dateFmt(d){
+  return lang==="pl"
+    ? new Date(d).toLocaleDateString("pl-PL")
+    : new Date(d).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+}
+
+// =================== RENDER ===================
+function render(){
+  const app=document.getElementById("app");
+  app.innerHTML="";
+
+  // HOME
+  if(view==="home"){
+    app.innerHTML=`
+      <h1>${lang==="pl"?"KRYSS — technologia i projekty":"KRYSS — technology & projects"}</h1>
+      <p>${lang==="pl"
+        ?"Programowanie, cyberbezpieczeństwo, nagłośnienie i eksperymenty."
+        :"Programming, cybersecurity, audio systems and experiments."}</p>
+    `;
+  }
+
+  // BLOG LISTA
+  if(view==="blog"){
+    app.innerHTML=`
+      <h1>Blog</h1>
+      <select onchange="sortPosts(this.value)">
+        <option value="new">${lang==="pl"?"Najnowsze":"Newest"}</option>
+        <option value="old">${lang==="pl"?"Najstarsze":"Oldest"}</option>
+        <option value="az">A–Z</option>
+        <option value="za">Z–A</option>
+      </select><br><br>
+    `;
+    posts.forEach(p=>{
+      app.innerHTML+=`
+        <div class="card">
+          <h3>${p.title[lang]}</h3>
+          <p>${p.author} • ${dateFmt(p.date)}</p>
+          <a class="link" onclick="go('post','${p.id}')">
+            ${lang==="pl"?"Czytaj":"Read"}
+          </a>
+        </div>`;
+    });
+  }
+
+  // BLOG POST
+  if(view==="post"){
+    const p=posts.find(x=>x.id===currentPost);
+    app.innerHTML=`
+      <h1>${p.title[lang]}</h1>
+      <p>${p.author} • ${dateFmt(p.date)}</p>
+      ${p.content[lang]}
+      <br><br>
+      <a class="link" onclick="go('blog')">← Back</a>
+    `;
+  }
+
+  // PROJEKTY
+  if(view==="projects"){
+    app.innerHTML="<h1>Projekty</h1>";
+    projects.forEach(p=>{
+      app.innerHTML+=`
+        <div class="card">
+          <h3>${p.name}</h3>
+          <p>${p.desc[lang]}</p>
+          <a class="link" href="${p.download}" target="_blank">
+            ⬇ ${lang==="pl"?"Pobierz":"Download"}
+          </a>
+        </div>`;
+    });
+  }
+
+  // CV
+  if(view==="cv"){
+    app.innerHTML=`
+      <h1>CV</h1>
+      <div class="card">
+        <h3>${lang==="pl"?"Doświadczenie":"Experience"}</h3>
+        <ul>
+          <li>${lang==="pl"?"Nagłośnienie i systemy audio":"Audio & sound systems"}</li>
+          <li>${lang==="pl"?"Cyberbezpieczeństwo":"Cybersecurity"}</li>
+          <li>${lang==="pl"?"Programowanie":"Programming"}</li>
+        </ul>
+        <h3>${lang==="pl"?"Języki":"Languages"}</h3>
+        <ul>
+          <li>Polski — native</li>
+          <li>English — technical</li>
+        </ul>
+      </div>
+    `;
+  }
+}
+
+// SORT
+function sortPosts(t){
+  if(t==="az")posts.sort((a,b)=>a.title[lang].localeCompare(b.title[lang]));
+  if(t==="za")posts.sort((a,b)=>b.title[lang].localeCompare(a.title[lang]));
+  if(t==="new")posts.sort((a,b)=>new Date(b.date)-new Date(a.date));
+  if(t==="old")posts.sort((a,b)=>new Date(a.date)-new Date(b.date));
+  render();
+}
+
+render();
+</script>
 </body>
 </html>
