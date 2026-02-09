@@ -1,0 +1,24 @@
+[
+  {
+    "id": "wpis-01",
+    "title": {"pl": "Mój pierwszy wpis", "en": "My First Post"},
+    "author": "Kryss",
+    "date": "2026-02-09",
+    "category": "Programowanie",
+    "content": {
+      "pl": "<p>To jest treść wpisu po polsku.</p>",
+      "en": "<p>This is the post content in English.</p>"
+    }
+  },
+  {
+    "id": "wpis-02",
+    "title": {"pl": "Cyberbezpieczeństwo 101", "en": "Cybersecurity 101"},
+    "author": "Kryss",
+    "date": "2026-02-07",
+    "category": "Cyberbezpieczeństwo",
+    "content": {
+      "pl": "<p>Opis zagrożeń w sieci.</p>",
+      "en": "<p>Description of network threats.</p>"
+    }
+  }
+]
