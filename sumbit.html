@@ -63,7 +63,7 @@ button:hover{background:#17a84a}
   <input id="song" placeholder="Nazwa piosenki *">
   <input id="album" placeholder="Album *">
   <input id="name" placeholder="Imię (opcjonalnie)">
-  <input id="class" placeholder="Klasa (opcjonalnie)">
+  <input id="className" placeholder="Klasa (opcjonalnie)">
 
   <div class="criteria">
     <strong>Kryteria:</strong><br>
@@ -83,12 +83,21 @@ button:hover{background:#17a84a}
 const WEBHOOK_URL =
 "https://discord.com/api/webhooks/1470898854730797068/ci_H5ZLLbKxBRks1tVfLhV81vPdn4pr-0zanZjfEwcFxEHedJUNOmfCc0HKzKBXJC0Zk";
 
+// POPRAWNE POBRANIE ELEMENTÓW
+const songEl = document.getElementById("song");
+const albumEl = document.getElementById("album");
+const nameEl = document.getElementById("name");
+const classEl = document.getElementById("className");
+const acceptEl = document.getElementById("accept");
+const statusEl = document.getElementById("status");
+
 function sendSong(){
-  if(!song.value || !album.value){
+  if(!songEl.value.trim() || !albumEl.value.trim()){
     status("Uzupełnij wymagane pola *");
     return;
   }
-  if(!accept.checked){
+
+  if(!acceptEl.checked){
     status("Musisz zaakceptować kryteria");
     return;
   }
@@ -101,10 +110,10 @@ function sendSong(){
         title:"🎵 Nowa propozycja piosenki",
         color:0x1db954,
         fields:[
-          {name:"Piosenka", value:song.value},
-          {name:"Album", value:album.value},
-          {name:"Imię", value:name.value || "Nie podano", inline:true},
-          {name:"Klasa", value:class.value || "Nie podano", inline:true},
+          {name:"Piosenka", value:songEl.value},
+          {name:"Album", value:albumEl.value},
+          {name:"Imię", value:nameEl.value || "Nie podano", inline:true},
+          {name:"Klasa", value:classEl.value || "Nie podano", inline:true},
           {name:"Kryteria", value:"Brak wulgarności, brak kontrowersji"}
         ],
         footer:{text:"kryss.pl/sumbit"},
@@ -113,13 +122,18 @@ function sendSong(){
     })
   }).then(()=>{
     status("Wysłano! 🎉");
-    document.querySelectorAll("input").forEach(i=>i.value="");
-    accept.checked=false;
+    songEl.value="";
+    albumEl.value="";
+    nameEl.value="";
+    classEl.value="";
+    acceptEl.checked=false;
+  }).catch(()=>{
+    status("Błąd wysyłania ❌");
   });
 }
 
-function status(t){
-  document.getElementById("status").innerText = t;
+function status(text){
+  statusEl.innerText = text;
 }
 </script>
 
