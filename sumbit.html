@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Submit Song — Kryss.pl</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  background:#0b0b0b;
+  color:#fff;
+  font-family:Arial, sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+.box{
+  background:#121212;
+  padding:30px;
+  border-radius:15px;
+  width:100%;
+  max-width:460px;
+  box-shadow:0 0 20px rgba(0,0,0,.6);
+}
+h1{text-align:center;}
+input{
+  width:100%;
+  margin-top:12px;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+}
+.criteria{
+  margin-top:15px;
+  font-size:.9rem;
+  color:#ccc;
+}
+button{
+  width:100%;
+  margin-top:20px;
+  padding:12px;
+  border:none;
+  border-radius:25px;
+  background:#1db954;
+  cursor:pointer;
+}
+button:hover{background:#17a84a}
+.status{
+  text-align:center;
+  margin-top:10px;
+  font-size:.9rem;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h1>🎶 Propozycja piosenki</h1>
+
+  <input id="song" placeholder="Nazwa piosenki *">
+  <input id="album" placeholder="Album *">
+  <input id="name" placeholder="Imię (opcjonalnie)">
+  <input id="class" placeholder="Klasa (opcjonalnie)">
+
+  <div class="criteria">
+    <strong>Kryteria:</strong><br>
+    • Brak wulgarności<br>
+    • Brak kontrowersji<br><br>
+    <label>
+      <input type="checkbox" id="accept">
+      Akceptuję kryteria
+    </label>
+  </div>
+
+  <button onclick="sendSong()">Wyślij</button>
+  <div class="status" id="status"></div>
+</div>
+
+<script>
+const WEBHOOK_URL =
+"https://discord.com/api/webhooks/1470898854730797068/ci_H5ZLLbKxBRks1tVfLhV81vPdn4pr-0zanZjfEwcFxEHedJUNOmfCc0HKzKBXJC0Zk";
+
+function sendSong(){
+  if(!song.value || !album.value){
+    status("Uzupełnij wymagane pola *");
+    return;
+  }
+  if(!accept.checked){
+    status("Musisz zaakceptować kryteria");
+    return;
+  }
+
+  fetch(WEBHOOK_URL,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      embeds:[{
+        title:"🎵 Nowa propozycja piosenki",
+        color:0x1db954,
+        fields:[
+          {name:"Piosenka", value:song.value},
+          {name:"Album", value:album.value},
+          {name:"Imię", value:name.value || "Nie podano", inline:true},
+          {name:"Klasa", value:class.value || "Nie podano", inline:true},
+          {name:"Kryteria", value:"Brak wulgarności, brak kontrowersji"}
+        ],
+        footer:{text:"kryss.pl/sumbit"},
+        timestamp:new Date()
+      }]
+    })
+  }).then(()=>{
+    status("Wysłano! 🎉");
+    document.querySelectorAll("input").forEach(i=>i.value="");
+    accept.checked=false;
+  });
+}
+
+function status(t){
+  document.getElementById("status").innerText = t;
+}
+</script>
+
+</body>
+</html>
