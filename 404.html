@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>404 — Kryss.pl</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  background:radial-gradient(circle at top, #1a1a1a, #0b0b0b);
+  color:#fff;
+  font-family:Arial, sans-serif;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.container{
+  text-align:center;
+  max-width:600px;
+  padding:30px;
+}
+h1{
+  font-size:7rem;
+  margin:0;
+  color:#1db954;
+}
+h2{
+  margin-top:-10px;
+}
+p{
+  opacity:0.8;
+}
+button{
+  margin-top:25px;
+  padding:12px 25px;
+  background:#1db954;
+  border:none;
+  border-radius:30px;
+  font-size:1rem;
+  cursor:pointer;
+  transition:0.2s;
+}
+button:hover{
+  background:#17a84a;
+}
+.lang{
+  position:fixed;
+  top:15px;
+  right:20px;
+  cursor:pointer;
+  opacity:0.8;
+}
+.lang:hover{opacity:1;}
+.glitch{
+  position:relative;
+  display:inline-block;
+}
+.glitch::before,
+.glitch::after{
+  content:attr(data-text);
+  position:absolute;
+  left:0;
+  top:0;
+  width:100%;
+}
+.glitch::before{
+  color:#0ff;
+  animation:glitch1 2s infinite;
+}
+.glitch::after{
+  color:#f0f;
+  animation:glitch2 1.5s infinite;
+}
+@keyframes glitch1{
+  0%{clip-path:inset(0 0 80% 0);}
+  50%{clip-path:inset(30% 0 40% 0);}
+  100%{clip-path:inset(80% 0 0 0);}
+}
+@keyframes glitch2{
+  0%{clip-path:inset(80% 0 0 0);}
+  50%{clip-path:inset(40% 0 30% 0);}
+  100%{clip-path:inset(0 0 80% 0);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="lang" onclick="toggleLang()">PL / EN</div>
+
+<div class="container">
+  <h1 class="glitch" data-text="404">404</h1>
+  <h2 id="title"></h2>
+  <p id="desc"></p>
+  <button onclick="goHome()" id="btn"></button>
+</div>
+
+<script>
+let lang = localStorage.getItem("lang") || "pl";
+
+function toggleLang(){
+  lang = lang==="pl"?"en":"pl";
+  localStorage.setItem("lang",lang);
+  render();
+}
+
+function goHome(){
+  window.location.href = "index.html";
+}
+
+function render(){
+  document.getElementById("title").innerText =
+    lang==="pl" ? "Strona nie została znaleziona" : "Page not found";
+
+  document.getElementById("desc").innerText =
+    lang==="pl"
+      ? "Wygląda na to, że trafiłeś w pustkę. Ta strona nie istnieje lub została przeniesiona."
+      : "Looks like you hit the void. This page doesn't exist or has been moved.";
+
+  document.getElementById("btn").innerText =
+    lang==="pl" ? "Powrót na stronę główną" : "Back to home";
+}
+
+render();
+</script>
+
+</body>
+</html>
