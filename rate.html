@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Rate DJ — Kryss.pl</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  background:#0b0b0b;
+  color:#fff;
+  font-family:Arial, sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+.box{
+  background:#121212;
+  padding:30px;
+  border-radius:15px;
+  width:100%;
+  max-width:420px;
+  box-shadow:0 0 20px rgba(0,0,0,.6);
+}
+h1{text-align:center;}
+.stars{
+  display:flex;
+  justify-content:center;
+  font-size:2.5rem;
+  cursor:pointer;
+}
+.star{color:#444;transition:.2s}
+.star.active{color:#f5c542}
+input,textarea{
+  width:100%;
+  margin-top:12px;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+}
+button{
+  width:100%;
+  margin-top:18px;
+  padding:12px;
+  border:none;
+  border-radius:25px;
+  background:#1db954;
+  font-size:1rem;
+  cursor:pointer;
+}
+button:hover{background:#17a84a}
+.status{
+  text-align:center;
+  margin-top:10px;
+  font-size:.9rem;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h1>🎧 Oceń DJ-a</h1>
+
+  <div class="stars">
+    <span class="star">★</span>
+    <span class="star">★</span>
+    <span class="star">★</span>
+    <span class="star">★</span>
+    <span class="star">★</span>
+  </div>
+
+  <input id="email" placeholder="Email (opcjonalnie – kontakt zwrotny)">
+  <textarea id="comment" rows="4" placeholder="Komentarz (opcjonalnie)"></textarea>
+
+  <button onclick="sendRate()">Wyślij ocenę</button>
+  <div class="status" id="status"></div>
+</div>
+
+<script>
+const WEBHOOK_URL =
+"https://discord.com/api/webhooks/1470898854730797068/ci_H5ZLLbKxBRks1tVfLhV81vPdn4pr-0zanZjfEwcFxEHedJUNOmfCc0HKzKBXJC0Zk";
+
+let rating = 0;
+const stars = document.querySelectorAll(".star");
+
+stars.forEach((s,i)=>{
+  s.onclick = () => {
+    rating = i + 1;
+    stars.forEach((st,j)=>st.classList.toggle("active", j <= i));
+  }
+});
+
+function sendRate(){
+  if(!rating){
+    status("Wybierz ilość gwiazdek ⭐");
+    return;
+  }
+
+  fetch(WEBHOOK_URL,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      embeds:[{
+        title:"⭐ Nowa ocena DJ-a",
+        color:0xf5c542,
+        fields:[
+          {name:"Ocena", value:"⭐".repeat(rating)},
+          {name:"Komentarz", value:comment.value || "Brak"},
+          {name:"Email (kontakt)", value:email.value || "Nie podano"}
+        ],
+        footer:{text:"kryss.pl/rate"},
+        timestamp:new Date()
+      }]
+    })
+  }).then(()=>{
+    status("Dzięki za ocenę ❤️");
+    rating = 0;
+    stars.forEach(s=>s.classList.remove("active"));
+    comment.value="";
+    email.value="";
+  });
+}
+
+function status(t){
+  document.getElementById("status").innerText = t;
+}
+</script>
+
+</body>
+</html>
