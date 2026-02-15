@@ -1,153 +1,96 @@
+
+
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kryss.pl</title>
+<title>Kryss Blog</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#0b0b0b;color:#fff}
-nav{
-  background:#111;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:12px 25px;
-}
-nav .logo{font-weight:bold;font-size:18px;cursor:pointer}
-nav .links button{
-  margin-left:15px;
-  background:none;
-  border:none;
-  color:white;
-  cursor:pointer;
-  font-size:14px;
-}
-nav .links button:hover{color:#1db954}
-
-.page{display:none;padding:40px;max-width:1000px;margin:auto}
-.active{display:block}
-
-.blog-card{
-  background:#151515;
-  padding:20px;
-  border-radius:10px;
-  margin-bottom:15px;
-  cursor:pointer;
-}
-.blog-card:hover{background:#1c1c1c}
-
-select{
-  background:#111;
-  color:white;
-  border:1px solid #333;
-  padding:6px;
-  margin-bottom:20px;
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:linear-gradient(135deg,#0f0f0f,#1e1e1e);
+    color:white;
+    text-align:center;
 }
 
-.project{
-  background:#151515;
-  padding:20px;
-  border-radius:10px;
-  margin-bottom:15px;
+header{
+    padding:30px;
+    background:#111;
+    font-size:28px;
+    font-weight:bold;
+    letter-spacing:2px;
 }
-.project a{
-  display:inline-block;
-  margin-top:10px;
-  padding:8px 14px;
-  background:#1db954;
-  color:black;
-  text-decoration:none;
-  border-radius:20px;
-}
-.project a:hover{background:#17a84a}
 
-.btn{
-  margin-top:20px;padding:8px 14px;border:none;
-  background:#1db954;border-radius:20px;cursor:pointer
+.container{
+    max-width:800px;
+    margin:auto;
+    padding:20px;
 }
-.btn-secondary{
-  margin-left:10px;background:#333;color:#fff
+
+.post{
+    background:#181818;
+    padding:20px;
+    margin:20px 0;
+    border-radius:15px;
+    box-shadow:0 0 15px rgba(0,0,0,0.6);
+    transition:0.3s;
+}
+
+.post:hover{
+    transform:scale(1.02);
+}
+
+button{
+    padding:10px 20px;
+    border:none;
+    border-radius:10px;
+    background:#00ffcc;
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+    margin:5px;
+    transition:0.3s;
+}
+
+button:hover{
+    background:#00ccaa;
+}
+
+.back{
+    margin-top:20px;
+    display:inline-block;
+    color:#00ffcc;
+    cursor:pointer;
+}
+
+footer{
+    margin-top:40px;
+    padding:20px;
+    background:#111;
+    font-size:14px;
+    color:#aaa;
 }
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="logo" onclick="go('home')">Kryss.pl</div>
-  <div class="links">
-    <button onclick="go('home')">Home</button>
-    <button onclick="go('blog')">Blog</button>
-    <button onclick="go('cv')">CV</button>
-    <button onclick="go('projekty')">Projekty</button>
-    <button onclick="toggleLang()">PL / EN</button>
-  </div>
-</nav>
+<header id="headerTitle">Kryss Blog</header>
 
-<!-- HOME -->
-<div id="home" class="page active">
-  <h1 data-pl="Witaj na Kryss.pl" data-en="Welcome to Kryss.pl"></h1>
-  <p data-pl="Oficjalna strona Krystiana (Lfrx)." 
-     data-en="Official website of Krystian (Lfrx)."></p>
-</div>
+<div class="container" id="content"></div>
 
-<!-- BLOG -->
-<div id="blog" class="page">
-  <h1>Blog</h1>
-
-  <select onchange="sortPosts(this.value)">
-    <option value="newest">Najnowsze</option>
-    <option value="oldest">Najstarsze</option>
-    <option value="az">A-Z</option>
-    <option value="za">Z-A</option>
-  </select>
-
-  <div id="blogList"></div>
-  <div id="blogPost"></div>
-</div>
-
-<!-- CV -->
-<div id="cv" class="page">
-  <h1>CV</h1>
-  <p data-pl="<strong>Doświadczenie:</strong><br>• Nagłośnienie wydarzeń<br>• Cyberbezpieczeństwo<br>• Tworzenie stron i aplikacji<br><br><strong>Języki:</strong><br>• Polski<br>• Angielski"
-     data-en="<strong>Experience:</strong><br>• Sound system management<br>• Cybersecurity<br>• Web & app development<br><br><strong>Languages:</strong><br>• Polish<br>• English">
-  </p>
-</div>
-
-<!-- PROJEKTY -->
-<div id="projekty" class="page">
-  <h1 data-pl="Projekty" data-en="Projects"></h1>
-
-  <div class="project">
-    <h3>Neon Heist</h3>
-    <p data-pl="Gra stealth + puzzle w HTML/JS"
-       data-en="Stealth + puzzle game in HTML/JS"></p>
-    <a href="https://github.com/" target="_blank"
-       data-pl="Pobierz"
-       data-en="Download"></a>
-  </div>
-</div>
+<footer>© 2026 Kryss.pl</footer>
 
 <script>
-let lang="pl";
 
-function toggleLang(){
-  lang = lang==="pl"?"en":"pl";
-  applyLang();
-  renderPosts();
-}
+// 🌍 AUTOMATYCZNE WYKRYWANIE JĘZYKA
+const userLang = navigator.language || navigator.userLanguage;
+const lang = userLang.startsWith("pl") ? "pl" : "en";
 
-function applyLang(){
-  document.querySelectorAll("[data-pl]").forEach(el=>{
-    el.innerHTML = el.getAttribute("data-"+lang);
-  });
-}
-
-function go(page){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.getElementById(page).classList.add("active");
-}
-
+// 📚 BLOGI
 /* BLOG POSTS */
 
 let posts = [
@@ -183,76 +126,52 @@ let posts = [
     }
   }
 ];
+// 🔍 Sprawdź czy jest ?post=
+const params = new URLSearchParams(window.location.search);
+const postId = params.get("post");
 
-function renderPosts(){
-  const list=document.getElementById("blogList");
-  const postView=document.getElementById("blogPost");
-  list.innerHTML="";
-  postView.innerHTML="";
+const contentDiv = document.getElementById("content");
 
-  posts.forEach(p=>{
-    const div=document.createElement("div");
-    div.className="blog-card";
-    div.innerHTML=`
-      <h3>${p.title[lang]}</h3>
-      <small>${p.author} | ${p.date}</small>
+if(postId && posts[postId]){
+
+    const post = posts[postId];
+
+    contentDiv.innerHTML = `
+        <div class="post">
+            <h2>${post.title[lang]}</h2>
+            <p>${post.content[lang]}</p>
+            <button onclick="sharePost()">
+                ${lang === "pl" ? "Udostępnij" : "Share"}
+            </button>
+        </div>
+        <div class="back" onclick="goBack()">
+            ${lang === "pl" ? "← Powrót" : "← Back"}
+        </div>
     `;
-    div.onclick=()=>openPost(p.id);
-    list.appendChild(div);
-  });
+
+}else{
+
+    contentDiv.innerHTML = `
+        <div class="post">
+            <h2>${lang === "pl" ? "Wpisy bloga" : "Blog posts"}</h2>
+            <p><a href="?post=1" style="color:#00ffcc;">${posts[1].title[lang]}</a></p>
+            <p><a href="?post=2" style="color:#00ffcc;">${posts[2].title[lang]}</a></p>
+        </div>
+    `;
 }
 
-function openPost(id){
-  const post = posts.find(p=>p.id===id);
-  if(!post) return;
-
-  document.getElementById("blogList").innerHTML="";
-  document.getElementById("blogPost").innerHTML=`
-    <h2>${post.title[lang]}</h2>
-    <small>${post.author} | ${post.date}</small>
-    <div style="margin-top:20px">${post.content[lang]}</div>
-
-    <button class="btn" onclick="sharePost('${post.id}')">
-      ${lang==="pl"?"Udostępnij":"Share"}
-    </button>
-
-    <button class="btn btn-secondary" onclick="history.pushState(null,null,window.location.pathname);renderPosts()">
-      ${lang==="pl"?"Powrót":"Back"}
-    </button>
-  `;
-
-  history.pushState(null,null,`?post=${post.id}`);
+// 🔗 SHARE
+function sharePost(){
+    navigator.clipboard.writeText(window.location.href).then(()=>{
+        alert(lang === "pl" ? "Link skopiowany!" : "Link copied!");
+    });
 }
 
-function sharePost(id){
-  const link = window.location.origin + window.location.pathname + "?post=" + id;
-  navigator.clipboard.writeText(link).then(()=>{
-    alert(lang==="pl"
-      ? "Link skopiowany do schowka!"
-      : "Link copied to clipboard!");
-  });
+// ⬅ BACK
+function goBack(){
+    window.location.href = "blog.html";
 }
 
-function sortPosts(type){
-  if(type==="newest") posts.sort((a,b)=>new Date(b.date)-new Date(a.date));
-  if(type==="oldest") posts.sort((a,b)=>new Date(a.date)-new Date(b.date));
-  if(type==="az") posts.sort((a,b)=>a.title[lang].localeCompare(b.title[lang]));
-  if(type==="za") posts.sort((a,b)=>b.title[lang].localeCompare(a.title[lang]));
-  renderPosts();
-}
-
-function checkURL(){
-  const params=new URLSearchParams(window.location.search);
-  const postId=params.get("post");
-  if(postId){
-    go("blog");
-    openPost(postId);
-  }
-}
-
-applyLang();
-renderPosts();
-checkURL();
 </script>
 
 </body>
