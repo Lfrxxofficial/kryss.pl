@@ -2,205 +2,258 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Kryss.pl</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kryss.pl</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#121212;color:#fff}
-.navbar{
-  position:fixed;top:0;width:100%;z-index:1000;
-  display:flex;justify-content:space-between;align-items:center;
-  padding:10px 20px;background:#111
+body{margin:0;font-family:Arial;background:#0b0b0b;color:#fff}
+nav{
+  background:#111;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 25px;
 }
-.logo{font-size:1.5em;font-weight:bold;cursor:pointer}
-.nav-links button{
-  margin-left:15px;background:none;border:none;
-  color:#fff;cursor:pointer
+nav .logo{font-weight:bold;font-size:18px;cursor:pointer}
+nav .links button{
+  margin-left:15px;
+  background:none;
+  border:none;
+  color:white;
+  cursor:pointer;
+  font-size:14px;
 }
-.nav-links button:hover{color:#1db954}
-main{padding:90px 20px;max-width:1000px;margin:auto}
-.card{
-  background:#1a1a1a;padding:20px;border-radius:12px;margin-bottom:15px
+nav .links button:hover{color:#1db954}
+
+.page{display:none;padding:40px;max-width:1000px;margin:auto}
+.active{display:block}
+
+.blog-card{
+  background:#151515;
+  padding:20px;
+  border-radius:10px;
+  margin-bottom:15px;
+  cursor:pointer;
 }
-a.link{color:#1db954;cursor:pointer;text-decoration:none}
-select{background:#1a1a1a;color:#fff;border:1px solid #333;padding:5px}
+.blog-card:hover{background:#1c1c1c}
+
+select{
+  background:#111;
+  color:white;
+  border:1px solid #333;
+  padding:6px;
+  margin-bottom:20px;
+}
+
+.project{
+  background:#151515;
+  padding:20px;
+  border-radius:10px;
+  margin-bottom:15px;
+}
+.project a{
+  display:inline-block;
+  margin-top:10px;
+  padding:8px 14px;
+  background:#1db954;
+  color:black;
+  text-decoration:none;
+  border-radius:20px;
+}
+.project a:hover{background:#17a84a}
+
+.btn{
+  margin-top:20px;padding:8px 14px;border:none;
+  background:#1db954;border-radius:20px;cursor:pointer
+}
+.btn-secondary{
+  margin-left:10px;background:#333;color:#fff
+}
 </style>
 </head>
-
 <body>
 
-<!-- NAVBAR -->
-<div class="navbar">
+<nav>
   <div class="logo" onclick="go('home')">Kryss.pl</div>
-  <div class="nav-links">
+  <div class="links">
+    <button onclick="go('home')">Home</button>
     <button onclick="go('blog')">Blog</button>
-    <button onclick="go('projects')">Projekty</button>
     <button onclick="go('cv')">CV</button>
+    <button onclick="go('projekty')">Projekty</button>
     <button onclick="toggleLang()">PL / EN</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="home" class="page active">
+  <h1 data-pl="Witaj na Kryss.pl" data-en="Welcome to Kryss.pl"></h1>
+  <p data-pl="Oficjalna strona Krystiana (Lfrx)." 
+     data-en="Official website of Krystian (Lfrx)."></p>
+</div>
+
+<!-- BLOG -->
+<div id="blog" class="page">
+  <h1>Blog</h1>
+
+  <select onchange="sortPosts(this.value)">
+    <option value="newest">Najnowsze</option>
+    <option value="oldest">Najstarsze</option>
+    <option value="az">A-Z</option>
+    <option value="za">Z-A</option>
+  </select>
+
+  <div id="blogList"></div>
+  <div id="blogPost"></div>
+</div>
+
+<!-- CV -->
+<div id="cv" class="page">
+  <h1>CV</h1>
+  <p data-pl="<strong>Doświadczenie:</strong><br>• Nagłośnienie wydarzeń<br>• Cyberbezpieczeństwo<br>• Tworzenie stron i aplikacji<br><br><strong>Języki:</strong><br>• Polski<br>• Angielski"
+     data-en="<strong>Experience:</strong><br>• Sound system management<br>• Cybersecurity<br>• Web & app development<br><br><strong>Languages:</strong><br>• Polish<br>• English">
+  </p>
+</div>
+
+<!-- PROJEKTY -->
+<div id="projekty" class="page">
+  <h1 data-pl="Projekty" data-en="Projects"></h1>
+
+  <div class="project">
+    <h3>Neon Heist</h3>
+    <p data-pl="Gra stealth + puzzle w HTML/JS"
+       data-en="Stealth + puzzle game in HTML/JS"></p>
+    <a href="https://github.com/" target="_blank"
+       data-pl="Pobierz"
+       data-en="Download"></a>
   </div>
 </div>
 
-<main id="app"></main>
-
 <script>
-// =================== STAN ===================
-let lang = localStorage.getItem("lang") || "pl";
-let view = "home";
-let currentPost = null;
+let lang="pl";
 
-// =================== BLOG ===================
+function toggleLang(){
+  lang = lang==="pl"?"en":"pl";
+  applyLang();
+  renderPosts();
+}
+
+function applyLang(){
+  document.querySelectorAll("[data-pl]").forEach(el=>{
+    el.innerHTML = el.getAttribute("data-"+lang);
+  });
+}
+
+function go(page){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(page).classList.add("active");
+}
+
+/* BLOG POSTS */
+
 let posts = [
   {
     id:"p1",
-    title:{pl:"Witaj na kryss.pl!",en:"Welcome on kryss.pl!"},
-    author:"Krystian aka.Lfrx",
+    title:{pl:"Witaj na kryss.pl!",en:"Welcome to kryss.pl!"},
+    author:"Krystian aka Lfrx",
     date:"2026-02-09",
     content:{
       pl:"<p>Witaj</p>",
       en:"<p>Welcome</p>"
     }
   },
-    {
+  {
     id:"p2",
-    title:{pl:"RoleComputer? Coż to",en:"RoleComputer? What is that?"},
-    author:"Krystian aka.Lfrx",
+    title:{pl:"RoleComputer? Cóż to?",en:"RoleComputer? What is that?"},
+    author:"Krystian aka Lfrx",
     date:"2026-02-09",
     content:{
-      pl:"<p>Witaj w kolejnym blogu, w dzisiejszym vlogu po rozmawiamy i ocenimy server RoleComputer Podkreślam że ten blog nie jest sponsorowany, jest to moja szczera opinia. a więc przejdźmy do sedna! 1.Czym jest RoleComputer? Rolecomputer to serwer minecraft na modyfikacjach,jest to roleplay pomieszany z modem computercraft : tweaked (CC:T) 2.Co o nim uważam Jest on super serverem minecraft dla osób zainteresowanym programowaniem lecz dla osób które poszukują servera minecraft rp, jest on angielski lecz ma miłą społecznośc lecz jest on angielski więdz niektórzy polscy gracze mogą się w nim nie odnaleść, To jest na tyle do zobaczenia w kolejnym blogu!</p>",
-      en:"<p>Welcome to another blog. In today's vlog, we'll discuss and review the RoleComputer server. I want to emphasize that this blog is not sponsored; this is my honest opinion. So let's get to the point! 1. What is RoleComputer? RoleComputer is a modified Minecraft server. It's roleplay mixed with the ComputerCraft mod: tweaked (CC:T). 2. What do I think about it? It's a great Minecraft server for those interested in programming, but also for those looking for a Minecraft RP server. It's English, but has a friendly community. However, it's English, so some Polish players may not find it useful. That's all for now, see you in the next blog!</p>"
-    },
-      {
+      pl:"<p>RoleComputer to serwer Minecraft z ComputerCraft: Tweaked (CC:T).</p>",
+      en:"<p>RoleComputer is a Minecraft server using ComputerCraft: Tweaked (CC:T).</p>"
+    }
+  },
+  {
     id:"p3",
-    title:{pl:"Ceny ramu DDR5 zaczynają się stabylizować w Niemczech",en:"DDR5 RAM pricing begins to stabilize in Germany"},
-    author:"Krystian aka.Lfrx",
+    title:{pl:"Ceny RAM-u DDR5 stabilizują się w Niemczech",
+           en:"DDR5 RAM prices stabilize in Germany"},
+    author:"Krystian aka Lfrx",
     date:"2026-02-15",
     content:{
-      pl:"<p>Witaj w kolejnym blogu, W niemczech odnotowano tylko 0,1% zwiększenia w cenach ramu!, Czy jesteśmy uratowani?       Jest to bardzo możliwe lecz jeszcze trochę trzeba poczekać!</p>",
-      en:"<p>Welcome to another blog. Germany saw only a 0.1% increase in RAM prices (in January). Are we saved? It's very possible, but we still have to wait a while!</p>"
+      pl:"<p>W Niemczech wzrost cen to tylko 0,1%.</p>",
+      en:"<p>Germany saw only a 0.1% price increase.</p>"
     }
   }
 ];
 
-// =================== PROJEKTY ===================
-const projects = [
-  {
-    name:"XBrowse",
-    desc:{pl:"Przeglądarka w Pythonie",en:"Python web browser"},
-    download:"https://kryss.pl/downloadsoon"
-  },
-];
+function renderPosts(){
+  const list=document.getElementById("blogList");
+  const postView=document.getElementById("blogPost");
+  list.innerHTML="";
+  postView.innerHTML="";
 
-// =================== FUNKCJE ===================
-function toggleLang(){
-  lang = lang==="pl"?"en":"pl";
-  localStorage.setItem("lang",lang);
-  render();
-}
-function go(v,id=null){
-  view=v; currentPost=id; render();
-}
-function dateFmt(d){
-  return lang==="pl"
-    ? new Date(d).toLocaleDateString("pl-PL")
-    : new Date(d).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
-}
-
-// =================== RENDER ===================
-function render(){
-  const app=document.getElementById("app");
-  app.innerHTML="";
-
-  // HOME
-  if(view==="home"){
-    app.innerHTML=`
-      <h1>${lang==="pl"?"KRYSS — technologia i projekty":"KRYSS — technology & projects"}</h1>
-      <p>${lang==="pl"
-        ?"Programowanie, cyberbezpieczeństwo, nagłośnienie i eksperymenty."
-        :"Programming, cybersecurity, audio systems and experiments."}</p>
+  posts.forEach(p=>{
+    const div=document.createElement("div");
+    div.className="blog-card";
+    div.innerHTML=`
+      <h3>${p.title[lang]}</h3>
+      <small>${p.author} | ${p.date}</small>
     `;
-  }
+    div.onclick=()=>openPost(p.id);
+    list.appendChild(div);
+  });
+}
 
-  // BLOG LISTA
-  if(view==="blog"){
-    app.innerHTML=`
-      <h1>Blog</h1>
-      <select onchange="sortPosts(this.value)">
-        <option value="new">${lang==="pl"?"Najnowsze":"Newest"}</option>
-        <option value="old">${lang==="pl"?"Najstarsze":"Oldest"}</option>
-        <option value="az">A–Z</option>
-        <option value="za">Z–A</option>
-      </select><br><br>
-    `;
-    posts.forEach(p=>{
-      app.innerHTML+=`
-        <div class="card">
-          <h3>${p.title[lang]}</h3>
-          <p>${p.author} • ${dateFmt(p.date)}</p>
-          <a class="link" onclick="go('post','${p.id}')">
-            ${lang==="pl"?"Czytaj":"Read"}
-          </a>
-        </div>`;
-    });
-  }
+function openPost(id){
+  const post = posts.find(p=>p.id===id);
+  if(!post) return;
 
-  // BLOG POST
-  if(view==="post"){
-    const p=posts.find(x=>x.id===currentPost);
-    app.innerHTML=`
-      <h1>${p.title[lang]}</h1>
-      <p>${p.author} • ${dateFmt(p.date)}</p>
-      ${p.content[lang]}
-      <br><br>
-      <a class="link" onclick="go('blog')">← Back</a>
-    `;
-  }
+  document.getElementById("blogList").innerHTML="";
+  document.getElementById("blogPost").innerHTML=`
+    <h2>${post.title[lang]}</h2>
+    <small>${post.author} | ${post.date}</small>
+    <div style="margin-top:20px">${post.content[lang]}</div>
 
-  // PROJEKTY
-  if(view==="projects"){
-    app.innerHTML="<h1>Projekty</h1>";
-    projects.forEach(p=>{
-      app.innerHTML+=`
-        <div class="card">
-          <h3>${p.name}</h3>
-          <p>${p.desc[lang]}</p>
-          <a class="link" href="${p.download}" target="_blank">
-            ⬇ ${lang==="pl"?"Pobierz":"Download"}
-          </a>
-        </div>`;
-    });
-  }
+    <button class="btn" onclick="sharePost('${post.id}')">
+      ${lang==="pl"?"Udostępnij":"Share"}
+    </button>
 
-  // CV
-  if(view==="cv"){
-    app.innerHTML=`
-      <h1>CV</h1>
-      <div class="card">
-        <h3>${lang==="pl"?"Doświadczenie":"Experience"}</h3>
-        <ul>
-          <li>${lang==="pl"?"Nagłośnienie i systemy audio":"Audio & sound systems"}</li>
-          <li>${lang==="pl"?"Cyberbezpieczeństwo":"Cybersecurity"}</li>
-          <li>${lang==="pl"?"Programowanie":"Programming"}</li>
-        </ul>
-        <h3>${lang==="pl"?"Języki":"Languages"}</h3>
-        <ul>
-          <li>Polski — native</li>
-          <li>English — technical</li>
-        </ul>
-      </div>
-    `;
+    <button class="btn btn-secondary" onclick="history.pushState(null,null,window.location.pathname);renderPosts()">
+      ${lang==="pl"?"Powrót":"Back"}
+    </button>
+  `;
+
+  history.pushState(null,null,`?post=${post.id}`);
+}
+
+function sharePost(id){
+  const link = window.location.origin + window.location.pathname + "?post=" + id;
+  navigator.clipboard.writeText(link).then(()=>{
+    alert(lang==="pl"
+      ? "Link skopiowany do schowka!"
+      : "Link copied to clipboard!");
+  });
+}
+
+function sortPosts(type){
+  if(type==="newest") posts.sort((a,b)=>new Date(b.date)-new Date(a.date));
+  if(type==="oldest") posts.sort((a,b)=>new Date(a.date)-new Date(b.date));
+  if(type==="az") posts.sort((a,b)=>a.title[lang].localeCompare(b.title[lang]));
+  if(type==="za") posts.sort((a,b)=>b.title[lang].localeCompare(a.title[lang]));
+  renderPosts();
+}
+
+function checkURL(){
+  const params=new URLSearchParams(window.location.search);
+  const postId=params.get("post");
+  if(postId){
+    go("blog");
+    openPost(postId);
   }
 }
 
-// SORT
-function sortPosts(t){
-  if(t==="az")posts.sort((a,b)=>a.title[lang].localeCompare(b.title[lang]));
-  if(t==="za")posts.sort((a,b)=>b.title[lang].localeCompare(a.title[lang]));
-  if(t==="new")posts.sort((a,b)=>new Date(b.date)-new Date(a.date));
-  if(t==="old")posts.sort((a,b)=>new Date(a.date)-new Date(b.date));
-  render();
-}
-
-render();
+applyLang();
+renderPosts();
+checkURL();
 </script>
+
 </body>
 </html>
