@@ -1,13 +1,76 @@
-body {margin:0;font-family:sans-serif;background:#121212;color:#fff;}
-.navbar{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background:#111;position:fixed;top:0;width:100%;z-index:1000;}
-.navbar .logo{font-size:1.5em;font-weight:bold;cursor:pointer;}
-.navbar .nav-links a, .navbar .nav-links button{margin-left:15px;color:#fff;text-decoration:none;background:none;border:none;cursor:pointer;transition:0.2s;}
-.navbar .nav-links a:hover, .navbar .nav-links button:hover{color:#1db954;}
-.hero{padding:120px 20px 40px;}
-.sections{display:flex;flex-wrap:wrap;gap:10px;padding:20px;}
-.section-card{background:#1a1a1a;padding:20px;border-radius:10px;flex:1 1 150px;text-align:center;cursor:pointer;transition:0.2s;}
-.section-card:hover{background:#1db954;color:#000;}
-.blog-list{display:flex;flex-direction:column;gap:15px;padding:20px;}
-.blog-card{background:#1a1a1a;padding:15px;border-radius:10px;}
-.blog-card a{text-decoration:none;color:#1db954;}
-.blog-controls{padding:80px 20px 20px;}
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #111;
+  color: white;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 30px;
+  background: #000;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+nav a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: white;
+}
+
+.hero {
+  text-align: center;
+  padding: 100px 20px;
+}
+
+.card {
+  background: #222;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+/* FOOTER */
+footer {
+  background: #000;
+  padding: 20px;
+  margin-top: 50px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.socials a {
+  margin-right: 15px;
+  color: white;
+  text-decoration: none;
+}
+
+.copy {
+  opacity: 0.7;
+  font-size: 14px;
+}
+
+/* CENTER (maintenance) */
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
