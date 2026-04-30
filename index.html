@@ -1,178 +1,20 @@
-
-
-
 <!DOCTYPE html>
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kryss Blog</title>
-
-<style>
-body{
-    margin:0;
-    font-family:Arial, Helvetica, sans-serif;
-    background:linear-gradient(135deg,#0f0f0f,#1e1e1e);
-    color:white;
-    text-align:center;
-}
-
-header{
-    padding:30px;
-    background:#111;
-    font-size:28px;
-    font-weight:bold;
-    letter-spacing:2px;
-}
-
-.container{
-    max-width:800px;
-    margin:auto;
-    padding:20px;
-}
-
-.post{
-    background:#181818;
-    padding:20px;
-    margin:20px 0;
-    border-radius:15px;
-    box-shadow:0 0 15px rgba(0,0,0,0.6);
-    transition:0.3s;
-}
-
-.post:hover{
-    transform:scale(1.02);
-}
-
-button{
-    padding:10px 20px;
-    border:none;
-    border-radius:10px;
-    background:#00ffcc;
-    color:black;
-    font-weight:bold;
-    cursor:pointer;
-    margin:5px;
-    transition:0.3s;
-}
-
-button:hover{
-    background:#00ccaa;
-}
-
-.back{
-    margin-top:20px;
-    display:inline-block;
-    color:#00ffcc;
-    cursor:pointer;
-}
-
-footer{
-    margin-top:40px;
-    padding:20px;
-    background:#111;
-    font-size:14px;
-    color:#aaa;
-}
-</style>
+<title>Maintenance</title>
+<link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="center">
 
-<header id="headerTitle">Kryss Blog</header>
+<div>
+  <h1 data-pl="🚧 Strona w trakcie aktualizacji"
+      data-en="🚧 Website is being updated"></h1>
 
-<div class="container" id="content"></div>
+  <p data-pl="Wracam niedługo 😉"
+     data-en="I will be back soon 😉"></p>
+</div>
 
-<footer>© 2026 Kryss.pl</footer>
-
-<script>
-
-// 🌍 AUTOMATYCZNE WYKRYWANIE JĘZYKA
-const userLang = navigator.language || navigator.userLanguage;
-const lang = userLang.startsWith("pl") ? "pl" : "en";
-
-// 📚 BLOGI
-/* BLOG POSTS */
-
-let posts = [
-  {
-    id:"p1",
-    title:{pl:"Witaj na kryss.pl!",en:"Welcome to kryss.pl!"},
-    author:"Krystian aka Lfrx",
-    date:"2026-02-09",
-    content:{
-      pl:"<p>Witaj</p>",
-      en:"<p>Welcome</p>"
-    }
-  },
-  {
-    id:"p2",
-    title:{pl:"RoleComputer? Cóż to?",en:"RoleComputer? What is that?"},
-    author:"Krystian aka Lfrx",
-    date:"2026-02-09",
-    content:{
-      pl:"<p>RoleComputer to serwer Minecraft z ComputerCraft: Tweaked (CC:T).</p>",
-      en:"<p>RoleComputer is a Minecraft server using ComputerCraft: Tweaked (CC:T).</p>"
-    }
-  },
-  {
-    id:"p3",
-    title:{pl:"Ceny RAM-u DDR5 stabilizują się w Niemczech",
-           en:"DDR5 RAM prices stabilize in Germany"},
-    author:"Krystian aka Lfrx",
-    date:"2026-02-15",
-    content:{
-      pl:"<p>W Niemczech wzrost cen to tylko 0,1%.</p>",
-      en:"<p>Germany saw only a 0.1% price increase.</p>"
-    }
-  }
-];
-// 🔍 Sprawdź czy jest ?post=
-const params = new URLSearchParams(window.location.search);
-const postId = params.get("post");
-
-const contentDiv = document.getElementById("content");
-
-if(postId && posts[postId]){
-
-    const post = posts[postId];
-
-    contentDiv.innerHTML = `
-        <div class="post">
-            <h2>${post.title[lang]}</h2>
-            <p>${post.content[lang]}</p>
-            <button onclick="sharePost()">
-                ${lang === "pl" ? "Udostępnij" : "Share"}
-            </button>
-        </div>
-        <div class="back" onclick="goBack()">
-            ${lang === "pl" ? "← Powrót" : "← Back"}
-        </div>
-    `;
-
-}else{
-
-    contentDiv.innerHTML = `
-        <div class="post">
-            <h2>${lang === "pl" ? "Wpisy bloga" : "Blog posts"}</h2>
-            <p><a href="?post=1" style="color:#00ffcc;">${posts[1].title[lang]}</a></p>
-            <p><a href="?post=2" style="color:#00ffcc;">${posts[2].title[lang]}</a></p>
-        </div>
-    `;
-}
-
-// 🔗 SHARE
-function sharePost(){
-    navigator.clipboard.writeText(window.location.href).then(()=>{
-        alert(lang === "pl" ? "Link skopiowany!" : "Link copied!");
-    });
-}
-
-// ⬅ BACK
-function goBack(){
-    window.location.href = "blog.html";
-}
-
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
