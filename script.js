@@ -1,3 +1,26 @@
+function applyLang(lang) {
+  document.querySelectorAll("[data-pl]").forEach(el => {
+    el.textContent = el.dataset[lang];
+  });
+}
+
+window.lang = function(l) {
+  if (l === "pl" || l === "en") {
+    localStorage.setItem("lang", l);
+    applyLang(l);
+    console.log("Język zmieniony na:", l);
+  } else {
+    console.log("Użyj: lang('pl') albo lang('en')");
+  }
+};
+
+const saved = localStorage.getItem("lang");
+const currentLang = saved
+  ? saved
+  : (navigator.language.startsWith("pl") ? "pl" : "en");
+
+applyLang(currentLang);
+
 // 🌍 AUTO TRANSLATE
 const lang = navigator.language.startsWith("pl") ? "pl" : "en";
 
