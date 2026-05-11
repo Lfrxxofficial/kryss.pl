@@ -2,37 +2,40 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blog — Kryss.pl</title>
+<title>Blog</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<nav class="navbar">
-  <div class="logo" onclick="location.href='index.html'">Kryss.pl</div>
-  <div class="nav-links">
+
+<header>
+  <div class="logo">Kryss</div>
+  <nav>
+    <a href="index.html">Home</a>
     <a href="blog.html">Blog</a>
-    <a href="projekty.html">Projekty</a>
-    <a href="cv.html">CV</a>
-    <a href="kontakt.html">Kontakt</a>
-    <button id="lang-toggle">PL/EN</button>
+    <a href="projects.html">Projekty</a>
+  </nav>
+</header>
+
+<h1>Blog</h1>
+<div id="posts"></div>
+
+<footer>
+  <div class="footer-content">
+    <div class="socials">
+      <a href="#">Discord</a>
+      <a href="#">YouTube</a>
+      <a href="#">X</a>
+    </div>
+    <div class="copy">
+      Copyright © Kryss.pl
+    </div>
   </div>
-</nav>
+</footer>
 
-<section class="blog-controls">
-  <label for="sort">Sortuj:</label>
-  <select id="sort">
-    <option value="newest">Najnowsze</option>
-    <option value="oldest">Najstarsze</option>
-    <option value="a-z">A → Z</option>
-    <option value="z-a">Z → A</option>
-  </select>
-</section>
+<script src="script.js"></script>
+<script>
+loadPosts();
+</script>
 
-<section id="blog-list" class="blog-list">
-  <!-- Wpisy ładowane dynamicznie -->
-</section>
-
-<script src="main.js"></script>
-<script src="blog.js"></script>
 </body>
 </html>
